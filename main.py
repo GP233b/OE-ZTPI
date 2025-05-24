@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from genetic_algorithm.algorithm import run_genetic_algorithm
+from genetic_algorithm.algorithm import genetic_algorithm
 from genetic_algorithm.evaluation import schwefel
 import genetic_algorithm.mutation as mutation
 import genetic_algorithm.crossover as crossover
@@ -33,7 +33,7 @@ def api_run_genetic_algorithm():
         selection_func = getattr(selection, selection_name)
 
         # Uruchamianie algorytmu
-        best_solution = run_genetic_algorithm(
+        best_solution = genetic_algorithm(
             mutation_func,
             crossover_func,
             selection_func,
