@@ -1,6 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
 import type { EChartsCoreOption } from 'echarts/core';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSliderModule } from '@angular/material/slider';
+import { HomeService } from '../../services/home/home.service';
+import { GeneticAlgorithmRequest } from '../../models/genetic-algorithm-request.model';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
@@ -8,6 +18,13 @@ import { NgxEchartsModule } from 'ngx-echarts';
   standalone: true,
   imports: [
     NgxEchartsModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatSliderModule,
+    CommonModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -16,6 +33,54 @@ export class HomeComponent implements OnInit {
 
   options!: EChartsCoreOption;
   noise = getNoiseHelper();
+  showChart = false;
+
+  form: FormGroup;
+
+  mutationOptions = ['basic_mutation', 'single_point_mutation'];
+  crossoverOptions = ['one_point_crossover', 'uniform_crossover'];
+  selectionOptions = ['tournament_selection', 'roulette_selection'];
+
+  constructor(
+    private fb: FormBuilder,
+    private homeService: HomeService,
+  ) {
+    this.form = this.fb.group({
+      mutation: ['basic_mutation', Validators.required],
+      crossover: ['one_point_crossover', Validators.required],
+      selection: ['tournament_selection', Validators.required],
+      mutation_rate: [0.01, [Validators.required, Validators.min(0), Validators.max(1)]],
+      elitism_rate: [0.1, [Validators.required, Validators.min(0), Validators.max(1)]],
+      pop_size: [100, [Validators.required, Validators.min(1)]],
+      gens: [50, [Validators.required, Validators.min(1)]],
+      x_min: [-500, Validators.required],
+      x_max: [500, Validators.required],
+      dim: [10, [Validators.required, Validators.min(1)]]
+    });
+  }
+
+
+  onSubmit() {
+    if (this.form.valid) {
+      console.log(this.form.value);
+      const requestData: GeneticAlgorithmRequest = {
+        ...this.form.value
+      }
+      this.homeService.runGeneticAlgorithm(requestData).subscribe({
+        next: (response) => {
+          console.log('Response from server:', response);
+          // Handle the response as needed
+        },
+        error: (error) => {
+          console.error('Error occurred:', error);
+          // Handle the error as needed
+        }
+      });
+    } else {
+      console.log('Form is invalid');
+    }
+  }
+
 
   ngOnInit(): void {
     this.noise.seed(Math.random());

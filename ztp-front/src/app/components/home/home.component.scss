@@ -1,0 +1,80 @@
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f5;
+}
+
+/* Kontener formularza */
+form {
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f4f4f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Nagłówki w formularzu */
+mat-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* Przycisk 'Run Algorithm' */
+button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #303f9f;
+}
+
+button[disabled] {
+  background-color: #b0bec5;
+  cursor: not-allowed;
+}
+
+/* Błędy walidacji */
+mat-error {
+  color: #f44336; /* Czerwony kolor błędów */
+  font-size: 12px;
+}
+
+/* Stylowanie inputów */
+input.mat-input-element {
+  font-size: 14px;
+  padding: 10px;
+}
+
+/* Dodatkowe stylizowanie mat-select */
+mat-select {
+  font-size: 14px;
+}
+
+mat-select .mat-select-arrow {
+  color: #3f51b5;
+}
+
+/* Stylizacja etykiet w mat-form-field */
+mat-label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Stylizacja dla formControlName, np. dla "mutation_name", "crossover_name" itp. */
+.mat-form-field-infix {
+  padding: 0 10px;
+}
+
