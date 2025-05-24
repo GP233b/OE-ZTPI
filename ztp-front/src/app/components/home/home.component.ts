@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
 import type { EChartsCoreOption } from 'echarts/core';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { MatInputModule } from '@angular/material/input';
@@ -11,6 +10,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { HomeService } from '../../services/home/home.service';
 import { GeneticAlgorithmRequest } from '../../models/genetic-algorithm-request.model';
 import { CommonModule } from '@angular/common';
+import { GeneticAlgorithmResponse } from '../../models/genetic-algorithm-response.model';
 
 
 @Component({
@@ -29,24 +29,33 @@ import { CommonModule } from '@angular/common';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
 
-  options!: EChartsCoreOption;
-  noise = getNoiseHelper();
+  lineChartOptions!: EChartsCoreOption;
+  updateOptions!: EChartsCoreOption;
+  dataT: [number, number][] = [];
+  fullData: number[] = [];
+  currentIndex = 0;
+  timer: any;
+
+  heatmapOptions!: EChartsCoreOption;
+
   showChart = false;
 
   form: FormGroup;
 
-  mutationOptions = ['basic_mutation', 'single_point_mutation'];
+  mutationOptions = ['single_point_mutation'];
   crossoverOptions = ['one_point_crossover', 'uniform_crossover'];
   selectionOptions = ['tournament_selection', 'roulette_selection'];
+
+  data: GeneticAlgorithmResponse | null = null;
 
   constructor(
     private fb: FormBuilder,
     private homeService: HomeService,
   ) {
     this.form = this.fb.group({
-      mutation: ['basic_mutation', Validators.required],
+      mutation: ['single_point_mutation', Validators.required],
       crossover: ['one_point_crossover', Validators.required],
       selection: ['tournament_selection', Validators.required],
       mutation_rate: [0.01, [Validators.required, Validators.min(0), Validators.max(1)]],
@@ -54,26 +63,31 @@ export class HomeComponent implements OnInit {
       pop_size: [100, [Validators.required, Validators.min(1)]],
       gens: [50, [Validators.required, Validators.min(1)]],
       x_min: [-500, Validators.required],
-      x_max: [500, Validators.required],
-      dim: [10, [Validators.required, Validators.min(1)]]
+      x_max: [500, Validators.required]
     });
   }
 
-
   onSubmit() {
     if (this.form.valid) {
-      console.log(this.form.value);
       const requestData: GeneticAlgorithmRequest = {
-        ...this.form.value
+        ...this.form.value,
+        dim: 2
       }
       this.homeService.runGeneticAlgorithm(requestData).subscribe({
         next: (response) => {
-          console.log('Response from server:', response);
-          // Handle the response as needed
+          this.data = response;
+
+          this.showHeatmapChart(
+            this.data.best_individuals.map(row => row[0]),
+            this.data.best_individuals.map(row => row[1]),
+            this.data.history
+          )
+
+          this.showLineChartFromEpochs(this.data.history);
+
         },
         error: (error) => {
           console.error('Error occurred:', error);
-          // Handle the error as needed
         }
       });
     } else {
@@ -81,12 +95,10 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  showHeatmapChart(x: number[], y: number[], z: number[]): void {
+    const { data, xData, yData } = this.prepareHeatmapData(x, y, z);
 
-  ngOnInit(): void {
-    this.noise.seed(Math.random());
-    let { data, xData, yData } = this.generateData();
-
-    this.options = {
+    this.heatmapOptions = {
       tooltip: {},
       grid: {
         right: 140,
@@ -102,8 +114,8 @@ export class HomeComponent implements OnInit {
       },
       visualMap: {
         type: 'piecewise',
-        min: 0,
-        max: 1,
+        min: Math.floor(Math.min(...z)),
+        max: Math.floor(Math.max(...z)),
         left: 'right',
         top: 'center',
         calculable: true,
@@ -111,23 +123,14 @@ export class HomeComponent implements OnInit {
         splitNumber: 8,
         inRange: {
           color: [
-            '#313695',
-            '#4575b4',
-            '#74add1',
-            '#abd9e9',
-            '#e0f3f8',
-            '#ffffbf',
-            '#fee090',
-            '#fdae61',
-            '#f46d43',
-            '#d73027',
-            '#a50026',
+            '#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8',
+            '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026',
           ],
         },
       },
       series: [
         {
-          name: 'Gaussian',
+          name: 'Noise Data',
           type: 'heatmap',
           data: data,
           emphasis: {
@@ -141,135 +144,84 @@ export class HomeComponent implements OnInit {
         },
       ],
     };
+
+    this.showChart = true;
   }
 
-  generateData() {
-    let xData: number[] = [];
-    let yData: number[] = [];
+  prepareHeatmapData(x: number[], y: number[], z: number[]) {
+    const xData = Array.from(new Set(x)).sort((a, b) => a - b);
+    const yData = Array.from(new Set(y)).sort((a, b) => a - b);
 
-    let data = [];
-    for (let i = 0; i <= 200; i++) {
-      for (let j = 0; j <= 100; j++) {
-        data.push([i, j, this.noise.perlin2(i / 40, j / 20) + 0.5]);
-      }
-      xData.push(i);
+    const xIndexMap = new Map<number, number>();
+    xData.forEach((val, idx) => xIndexMap.set(val, idx));
+    const yIndexMap = new Map<number, number>();
+    yData.forEach((val, idx) => yIndexMap.set(val, idx));
+
+    const data = [];
+    for (let i = 0; i < x.length; i++) {
+      const xi = xIndexMap.get(x[i])!;
+      const yi = yIndexMap.get(y[i])!;
+      data.push([xi, yi, z[i]]);
     }
-    for (let j = 0; j < 100; j++) {
-      yData.push(j);
-    }
+
     return { data, xData, yData };
   }
-}
 
-///////////////////////////////////////////////////////////////////////////
-// perlin noise helper from https://github.com/josephg/noisejs
-///////////////////////////////////////////////////////////////////////////
-function getNoiseHelper() {
-  class Grad {
-    x: number;
-    y: number;
-    z: number;
-    constructor(x: number, y: number, z: number) {
-      this.x = x;
-      this.y = y;
-      this.z = z;
+  showLineChartFromEpochs(z: number[]) {
+    this.dataT = [];
+    this.fullData = z;
+    this.currentIndex = 0;
+
+    this.lineChartOptions = {
+      title: {
+        text: 'Results across the epochs',
+      },
+      tooltip: {
+        trigger: 'axis',
+        formatter: (params: any) => {
+          const p = params[0];
+          return 'Epoch: ' + p.data[0] + '<br/>Value: ' + p.data[1];
+        },
+      },
+      xAxis: {
+        type: 'value',
+        name: 'Epochs',
+      },
+      yAxis: {
+        type: 'value',
+        name: 'Values',
+      },
+      series: [
+        {
+          name: 'Value of',
+          type: 'line',
+          data: this.dataT,
+          showSymbol: true,
+          animation: true,
+        },
+      ],
+    };
+
+    if (this.timer) {
+      clearInterval(this.timer);
     }
 
-    dot2(x: number, y: number) {
-      return this.x * x + this.y * y;
-    }
+    this.timer = setInterval(() => {
+      if (this.currentIndex < this.fullData.length) {
+        this.dataT.push([this.currentIndex, this.fullData[this.currentIndex]]);
+        this.currentIndex++;
 
-    dot3(x: number, y: number, z: number) {
-      return this.x * x + this.y * y + this.z * z;
-    }
-  }
-
-  const grad3 = [
-    new Grad(1, 1, 0),
-    new Grad(-1, 1, 0),
-    new Grad(1, -1, 0),
-    new Grad(-1, -1, 0),
-    new Grad(1, 0, 1),
-    new Grad(-1, 0, 1),
-    new Grad(1, 0, -1),
-    new Grad(-1, 0, -1),
-    new Grad(0, 1, 1),
-    new Grad(0, -1, 1),
-    new Grad(0, 1, -1),
-    new Grad(0, -1, -1),
-  ];
-  const p = [
-    151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69,
-    142, 8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219,
-    203, 117, 35, 11, 32, 57, 177, 33, 88, 237, 149, 56, 87, 174, 20, 125, 136, 171, 168, 68, 175,
-    74, 165, 71, 134, 139, 48, 27, 166, 77, 146, 158, 231, 83, 111, 229, 122, 60, 211, 133, 230,
-    220, 105, 92, 41, 55, 46, 245, 40, 244, 102, 143, 54, 65, 25, 63, 161, 1, 216, 80, 73, 209, 76,
-    132, 187, 208, 89, 18, 169, 200, 196, 135, 130, 116, 188, 159, 86, 164, 100, 109, 198, 173, 186,
-    3, 64, 52, 217, 226, 250, 124, 123, 5, 202, 38, 147, 118, 126, 255, 82, 85, 212, 207, 206, 59,
-    227, 47, 16, 58, 17, 182, 189, 28, 42, 223, 183, 170, 213, 119, 248, 152, 2, 44, 154, 163, 70,
-    221, 153, 101, 155, 167, 43, 172, 9, 129, 22, 39, 253, 19, 98, 108, 110, 79, 113, 224, 232, 178,
-    185, 112, 104, 218, 246, 97, 228, 251, 34, 242, 193, 238, 210, 144, 12, 191, 179, 162, 241, 81,
-    51, 145, 235, 249, 14, 239, 107, 49, 192, 214, 31, 181, 199, 106, 157, 184, 84, 204, 176, 115,
-    121, 50, 45, 127, 4, 150, 254, 138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195,
-    78, 66, 215, 61, 156, 180,
-  ];
-  // To remove the need for index wrapping, double the permutation table length
-  let perm = new Array(512);
-  let gradP = new Array(512);
-  // This isn't a very good seeding function, but it works ok. It supports 2^16
-  // different seed values. Write something better if you need more seeds.
-  function seed(seed: number) {
-    if (seed > 0 && seed < 1) {
-      // Scale the seed out
-      seed *= 65536;
-    }
-    seed = Math.floor(seed);
-    if (seed < 256) {
-      seed |= seed << 8;
-    }
-    for (let i = 0; i < 256; i++) {
-      let v;
-      if (i & 1) {
-        v = p[i] ^ (seed & 255);
+        this.updateOptions = {
+          series: [
+            {
+              data: this.dataT,
+            },
+          ],
+        };
       } else {
-        v = p[i] ^ ((seed >> 8) & 255);
+        clearInterval(this.timer);
       }
-      perm[i] = perm[i + 256] = v;
-      gradP[i] = gradP[i + 256] = grad3[v % 12];
-    }
+    }, 100);
   }
-  seed(0);
-  // ##### Perlin noise stuff
-  function fade(t: number) {
-    return t * t * t * (t * (t * 6 - 15) + 10);
-  }
-  function lerp(a: number, b: number, t: number) {
-    return (1 - t) * a + t * b;
-  }
-  // 2D Perlin Noise
-  function perlin2(x: number, y: number) {
-    // Find unit grid cell containing point
-    let X = Math.floor(x),
-      Y = Math.floor(y);
-    // Get relative xy coordinates of point within that cell
-    x = x - X;
-    y = y - Y;
-    // Wrap the integer cells at 255 (smaller integer period can be introduced here)
-    X = X & 255;
-    Y = Y & 255;
-    // Calculate noise contributions from each of the four corners
-    let n00 = gradP[X + perm[Y]].dot2(x, y);
-    let n01 = gradP[X + perm[Y + 1]].dot2(x, y - 1);
-    let n10 = gradP[X + 1 + perm[Y]].dot2(x - 1, y);
-    let n11 = gradP[X + 1 + perm[Y + 1]].dot2(x - 1, y - 1);
-    // Compute the fade curve value for x
-    let u = fade(x);
-    // Interpolate the four results
-    return lerp(lerp(n00, n10, u), lerp(n01, n11, u), fade(y));
-  }
-
-  return {
-    seed,
-    perlin2,
-  };
 }
+

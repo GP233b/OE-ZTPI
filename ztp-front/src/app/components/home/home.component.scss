@@ -1,80 +1,80 @@
 
 .home-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  background-color: #f0f0f5;
+  background-color: var(--background-color);
+  color: var(--text-color);
+
+  // angular material button color change
+  --mdc-protected-button-label-text-color: var(--text-color);
+  --mdc-protected-button-container-color: var(--secondary-color);
 }
 
-/* Kontener formularza */
 form {
   width: 100%;
   max-width: 600px;
-  margin: 20px auto;
+  margin: 2vh 2vw;
   padding: 20px;
-  background-color: #f4f4f9;
+  background-color: var(--primary-color);
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Nagłówki w formularzu */
 mat-form-field {
   width: 100%;
   margin-bottom: 15px;
 }
 
-/* Przycisk 'Run Algorithm' */
 button {
   width: 100%;
   padding: 12px;
   font-size: 16px;
   font-weight: 500;
-  background-color: #3f51b5;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #303f9f;
-}
-
-button[disabled] {
   background-color: #b0bec5;
-  cursor: not-allowed;
 }
 
-/* Błędy walidacji */
 mat-error {
-  color: #f44336; /* Czerwony kolor błędów */
+  color: #f44336;
   font-size: 12px;
 }
 
-/* Stylowanie inputów */
 input.mat-input-element {
   font-size: 14px;
   padding: 10px;
 }
 
-/* Dodatkowe stylizowanie mat-select */
 mat-select {
   font-size: 14px;
 }
 
 mat-select .mat-select-arrow {
-  color: #3f51b5;
+  color: #7F8CAA;
 }
 
-/* Stylizacja etykiet w mat-form-field */
 mat-label {
   font-size: 14px;
   font-weight: 500;
 }
 
-/* Stylizacja dla formControlName, np. dla "mutation_name", "crossover_name" itp. */
 .mat-form-field-infix {
   padding: 0 10px;
 }
 
+.chart-container {
+  width: 100%;
+  padding: 20px;
+  background-color: var(--primary-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 2vh 2vw auto 2vw;
+}
+
+.demo-chart {
+  width: 50vw;
+  height: auto;
+}

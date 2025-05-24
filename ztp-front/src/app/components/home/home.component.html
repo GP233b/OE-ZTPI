@@ -1,8 +1,9 @@
 <div class="home-container">
-  <h1>Genetic Algorithm Configuration</h1>
-  <p>Configure the parameters for the genetic algorithm below:</p>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <h1>Genetic Algorithm Configuration</h1>
+        <p>Configure the parameters for the genetic algorithm below:</p>
+
         <mat-form-field appearance="fill">
             <mat-label>Mutation Name</mat-label>
             <mat-select formControlName="mutation">
@@ -75,17 +76,15 @@
             <mat-error *ngIf="form.get('x_max')?.hasError('required')">X Max is required.</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Dimensions</mat-label>
-            <input matInput type="number" formControlName="dim" min="1">
-            <mat-error *ngIf="form.get('dim')?.hasError('required')">Dimensions are required.</mat-error>
-        </mat-form-field>
-
         <div>
-            <button mat-raised-button color="primary" [disabled]="form.invalid" type="submit">Run Algorithm</button>
+            <button mat-raised-button [disabled]="form.invalid" type="submit">Run Algorithm</button>
         </div>
     </form>
 
+    <div *ngIf="showChart" class="chart-container">
+        <div echarts [options]="heatmapOptions" class="demo-chart"></div>
+        <div echarts [options]="lineChartOptions" [merge]="updateOptions" class="demo-chart"></div>
+    </div>
+
 </div>
 
-<div *ngIf="showChart" echarts [options]="options" class="demo-chart"></div>

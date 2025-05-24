@@ -3,8 +3,8 @@ import { RouterOutlet } from '@angular/router';
 
 import { NgxEchartsDirective, NgxEchartsModule, provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts/core';
-import { BarChart, HeatmapChart } from 'echarts/charts';
-import { GridComponent, TooltipComponent, VisualMapComponent } from 'echarts/components';
+import { BarChart, HeatmapChart, LineChart } from 'echarts/charts';
+import { GridComponent, TitleComponent, TooltipComponent, VisualMapComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -15,6 +15,8 @@ echarts.use([
   TooltipComponent,
   VisualMapComponent,
   HeatmapChart,
+  TitleComponent,
+  LineChart,
 ]);
 
 @Component({
