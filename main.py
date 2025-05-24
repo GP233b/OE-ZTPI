@@ -30,7 +30,7 @@ def api_run_genetic_algorithm():
 
 
         # Uruchamianie algorytmu
-        best_solution = genetic_algorithm(
+        best_solution, history, best_individuals_per_epoch = genetic_algorithm(
             mutation_name,
             crossover_name,
             selection_name,
@@ -47,7 +47,9 @@ def api_run_genetic_algorithm():
 
         return jsonify({
             'best_solution': best_solution.tolist(),
-            'score': score
+            'score': score,
+            'history': history,
+            'best_individuals': best_individuals_per_epoch
         })
 
     except Exception as e:
