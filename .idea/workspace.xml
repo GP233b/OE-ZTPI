@@ -5,27 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09b3685f-6b48-4497-b0f9-5b189181d436" name="Changes" comment="Update after merge">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/OE-ZTPI.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/best_solution_3d.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heatmap.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/iteration_graphs/best_solution_3d_1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/iteration_graphs/best_solution_3d_101.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/iteration_graphs/best_solution_3d_151.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/iteration_graphs/best_solution_3d_51.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/iteration_graphs/heatmap_1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/iteration_graphs/heatmap_101.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/iteration_graphs/heatmap_151.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/iteration_graphs/heatmap_51.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/iteration_graphs/results_1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/iteration_graphs/results_101.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/iteration_graphs/results_151.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/iteration_graphs/results_51.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/results.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/genetic_algorithm/algorithm.py" beforeDir="false" afterPath="$PROJECT_DIR$/genetic_algorithm/algorithm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/genetic_algorithm/save_iteration_graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/genetic_algorithm/save_iteration_graph.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/genetic_algorithm/visualization.py" beforeDir="false" afterPath="$PROJECT_DIR$/genetic_algorithm/visualization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,8 +43,8 @@
     "Python.main.executor": "Run",
     "Python.visualization.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging main",
-    "last_opened_file_path": "C:/Users/User/Desktop/OEO/OE-ZTPI",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/User/Desktop/tum",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -120,7 +100,17 @@
       <workItem from="1743609746965" duration="2563000" />
       <workItem from="1743612339112" duration="530000" />
       <workItem from="1743612875675" duration="337000" />
+      <workItem from="1746732676963" duration="25000" />
     </task>
+    <task id="LOCAL-00001" summary="Update after merge">
+      <option name="closed" value="true" />
+      <created>1743614865204</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1743614865204</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,6 +147,6 @@
     <SUITE FILE_PATH="coverage/OE_ZTPI$algorithm.coverage" NAME="algorithm Coverage Results" MODIFIED="1743611164536" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/genetic_algorithm" />
     <SUITE FILE_PATH="coverage/OE_ZTPI$visualization.coverage" NAME="visualization Coverage Results" MODIFIED="1743611685579" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/genetic_algorithm" />
     <SUITE FILE_PATH="coverage/OE_ZTPI$gui.coverage" NAME="gui Coverage Results" MODIFIED="1743613137384" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/genetic_algorithm" />
-    <SUITE FILE_PATH="coverage/OE_ZTPI$main.coverage" NAME="main Coverage Results" MODIFIED="1743613141273" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/OE_ZTPI$main.coverage" NAME="main Coverage Results" MODIFIED="1743614946882" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
