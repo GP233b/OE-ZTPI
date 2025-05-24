@@ -5,7 +5,7 @@ from genetic_algorithm.evaluation import schwefel
 from genetic_algorithm.mutation import *
 from genetic_algorithm.crossover import *
 from genetic_algorithm.selection import *
-from genetic_algorithm.save_iteration_graph import save_iteration_graph
+
 
 # Zaktualizowana funkcja genetyczna z pomiarem czasu i zapisem wykresu co 50 iteracji
 def genetic_algorithm(mutation_function, crossover_function, selection_function, mutation_rate, elitism_rate=1, pop_size=POP_SIZE, gens=GENS, x_min=X_MIN, x_max=X_MAX, dim=DIM):
@@ -26,9 +26,6 @@ def genetic_algorithm(mutation_function, crossover_function, selection_function,
         best_individual_idx = np.argmin(scores)
         best_individual = pop[best_individual_idx]
 
-        if iteration % 50 == 1:
-            save_iteration_graph(history, best_individual, iteration)
-        
         new_pop = [best_individual]
         
         for _ in range(pop_size // 2 - elitism_rate):
