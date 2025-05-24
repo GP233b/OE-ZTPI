@@ -27,16 +27,13 @@ def api_run_genetic_algorithm():
         x_max = float(data.get('x_max', 500))
         dim = int(data.get('dim', 10))
 
-        # Pobieranie funkcji z modułów
-        mutation_func = getattr(mutation, mutation_name)
-        crossover_func = getattr(crossover, crossover_name)
-        selection_func = getattr(selection, selection_name)
+
 
         # Uruchamianie algorytmu
         best_solution = genetic_algorithm(
-            mutation_func,
-            crossover_func,
-            selection_func,
+            mutation_name,
+            crossover_name,
+            selection_name,
             mutation_rate,
             elitism_rate,
             pop_size,
@@ -49,7 +46,7 @@ def api_run_genetic_algorithm():
         score = schwefel(best_solution)
 
         return jsonify({
-            'best_solution': best_solution,
+            'best_solution': best_solution.tolist(),
             'score': score
         })
 

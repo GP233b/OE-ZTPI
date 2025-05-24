@@ -28,7 +28,7 @@ def genetic_algorithm(mutation_function, crossover_function, selection_function,
 
         new_pop = [best_individual]
         
-        for _ in range(pop_size // 2 - elitism_rate):
+        for _ in range(int(pop_size // 2 - elitism_rate)):
             p1, p2 = selection_func(pop, scores), selection_func(pop, scores)
             c1, c2 = crossover_func(p1, p2) if np.random.rand() < CROSS_RATE else (p1, p2)
             new_pop.extend([mutation_func(c1, mutation_rate), mutation_func(c2, mutation_rate)])
