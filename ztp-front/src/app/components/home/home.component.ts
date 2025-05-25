@@ -45,7 +45,7 @@ export class HomeComponent {
   form: FormGroup;
 
   mutationOptions = ['single_point_mutation'];
-  crossoverOptions = ['one_point_crossover', 'uniform_crossover'];
+  crossoverOptions = ['one_point_crossover', 'uniform_crossover', 'granular_crossover'];
   selectionOptions = ['tournament_selection', 'roulette_selection'];
 
   data: GeneticAlgorithmResponse | null = null;
@@ -58,8 +58,8 @@ export class HomeComponent {
       mutation: ['single_point_mutation', Validators.required],
       crossover: ['one_point_crossover', Validators.required],
       selection: ['tournament_selection', Validators.required],
-      mutation_rate: [0.01, [Validators.required, Validators.min(0), Validators.max(1)]],
-      elitism_rate: [0.1, [Validators.required, Validators.min(0), Validators.max(1)]],
+      mutation_rate: [0.1, [Validators.required, Validators.min(0.1), Validators.max(1)]],
+      elitism_rate: [1, [Validators.required, Validators.min(1), Validators.max(100)]],
       pop_size: [100, [Validators.required, Validators.min(1)]],
       gens: [50, [Validators.required, Validators.min(1)]],
       x_min: [-500, Validators.required],
@@ -78,9 +78,8 @@ export class HomeComponent {
           this.data = response;
 
           this.showHeatmapChart(
-            this.data.best_individuals.map(row => row[0]),
-            this.data.best_individuals.map(row => row[1]),
-            this.data.history
+            requestData.x_min,
+            requestData.x_max
           )
 
           this.showLineChartFromEpochs(this.data.history);
@@ -95,8 +94,8 @@ export class HomeComponent {
     }
   }
 
-  showHeatmapChart(x: number[], y: number[], z: number[]): void {
-    const { data, xData, yData } = this.prepareHeatmapData(x, y, z);
+  showHeatmapChart(xMin: number, xMax: number): void {
+    const { data, xData, yData } = this.generateSchwefelData(xMin, xMax, 5);
 
     this.heatmapOptions = {
       tooltip: {},
@@ -106,16 +105,16 @@ export class HomeComponent {
       },
       xAxis: {
         type: 'category',
-        data: xData,
+        data: xData.map(x => x.toFixed(0)),
       },
       yAxis: {
         type: 'category',
-        data: yData,
+        data: yData.map(y => y.toFixed(0)),
       },
       visualMap: {
         type: 'piecewise',
-        min: Math.floor(Math.min(...z)),
-        max: Math.floor(Math.max(...z)),
+        min: Math.floor(Math.min(...data.map(d => d[2]))),
+        max: Math.floor(Math.max(...data.map(d => d[2]))),
         left: 'right',
         top: 'center',
         calculable: true,
@@ -130,7 +129,7 @@ export class HomeComponent {
       },
       series: [
         {
-          name: 'Noise Data',
+          name: 'Data',
           type: 'heatmap',
           data: data,
           emphasis: {
@@ -147,6 +146,43 @@ export class HomeComponent {
 
     this.showChart = true;
   }
+
+  generateSchwefelData(x_min: number, x_max: number, step: number = 5) {
+    const xData: number[] = [];
+    const yData: number[] = [];
+    const data: [number, number, number][] = [];
+
+    const schwefel = (x: number, y: number) => {
+      return (
+        -x * Math.sin(Math.sqrt(Math.abs(x))) -
+        y * Math.sin(Math.sqrt(Math.abs(y)))
+      );
+    };
+
+    const xSteps = Math.floor((x_max - x_min) / step);
+    const ySteps = xSteps;
+
+    for (let i = 0; i <= xSteps; i++) {
+      const x = x_min + i * step;
+      xData.push(x);
+    }
+
+    for (let j = 0; j <= ySteps; j++) {
+      const y = x_min + j * step;
+      yData.push(y);
+    }
+
+    for (let i = 0; i < xData.length; i++) {
+      for (let j = 0; j < yData.length; j++) {
+        const z = schwefel(xData[i], yData[j]) + (Math.random() - 0.5) * 0.1;
+        data.push([i, j, z]);
+      }
+    }
+
+    return { xData, yData, data };
+  }
+
+
 
   prepareHeatmapData(x: number[], y: number[], z: number[]) {
     const xData = Array.from(new Set(x)).sort((a, b) => a - b);

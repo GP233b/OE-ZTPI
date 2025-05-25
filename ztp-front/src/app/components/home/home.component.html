@@ -34,47 +34,55 @@
             <mat-error *ngIf="form.get('selection')?.hasError('required')">Selection name is required.</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Mutation Rate</mat-label>
-            <input matInput type="number" formControlName="mutation_rate" step="0.01" min="0" max="1">
-            <mat-error *ngIf="form.get('mutation_rate')?.hasError('required')">Mutation rate is required.</mat-error>
-            <mat-error *ngIf="form.get('mutation_rate')?.hasError('min')">Value must be greater than or equal to 0.</mat-error>
-            <mat-error *ngIf="form.get('mutation_rate')?.hasError('max')">Value must be less than or equal to 1.</mat-error>
-        </mat-form-field>
+        
+        <div class="spacer">
+            <mat-form-field appearance="fill">
+                <mat-label>Mutation Rate</mat-label>
+                <input matInput type="number" formControlName="mutation_rate" step="0.1" min="0" max="1">
+                <mat-error *ngIf="form.get('mutation_rate')?.hasError('required')">Mutation rate is required.</mat-error>
+                <mat-error *ngIf="form.get('mutation_rate')?.hasError('min')">Value must be greater than or equal to 0.</mat-error>
+                <mat-error *ngIf="form.get('mutation_rate')?.hasError('max')">Value must be less than or equal to 1.</mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Elitism Rate</mat-label>
-            <input matInput type="number" formControlName="elitism_rate" step="0.01" min="0" max="1">
-            <mat-error *ngIf="form.get('elitism_rate')?.hasError('required')">Elitism rate is required.</mat-error>
-            <mat-error *ngIf="form.get('elitism_rate')?.hasError('min')">Value must be greater than or equal to 0.</mat-error>
-            <mat-error *ngIf="form.get('elitism_rate')?.hasError('max')">Value must be less than or equal to 1.</mat-error>
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Elitism Rate</mat-label>
+                <input matInput type="number" formControlName="elitism_rate" step="1" min="1" max="100">
+                <mat-error *ngIf="form.get('elitism_rate')?.hasError('required')">Elitism rate is required.</mat-error>
+                <mat-error *ngIf="form.get('elitism_rate')?.hasError('min')">Value must be greater than or equal to 0.</mat-error>
+                <mat-error *ngIf="form.get('elitism_rate')?.hasError('max')">Value must be less than or equal to 100.</mat-error>
+            </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Population Size</mat-label>
-            <input matInput type="number" formControlName="pop_size" min="1">
-            <mat-error *ngIf="form.get('pop_size')?.hasError('required')">Population size is required.</mat-error>
-            <mat-error *ngIf="form.get('pop_size')?.hasError('min')">Population size must be greater than 0.</mat-error>
-        </mat-form-field>
+        <div class="spacer">
+            <mat-form-field appearance="fill">
+                <mat-label>Population Size</mat-label>
+                <input matInput type="number" formControlName="pop_size" min="1">
+                <mat-error *ngIf="form.get('pop_size')?.hasError('required')">Population size is required.</mat-error>
+                <mat-error *ngIf="form.get('pop_size')?.hasError('min')">Population size must be greater than 0.</mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Number of Generations</mat-label>
-            <input matInput type="number" formControlName="gens" min="1">
-            <mat-error *ngIf="form.get('gens')?.hasError('required')">Number of generations is required.</mat-error>
-            <mat-error *ngIf="form.get('gens')?.hasError('min')">Number of generations must be greater than 0.</mat-error>
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Number of Generations</mat-label>
+                <input matInput type="number" formControlName="gens" min="1">
+                <mat-error *ngIf="form.get('gens')?.hasError('required')">Number of generations is required.</mat-error>
+                <mat-error *ngIf="form.get('gens')?.hasError('min')">Number of generations must be greater than 0.</mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>X Min</mat-label>
-            <input matInput type="number" formControlName="x_min">
-            <mat-error *ngIf="form.get('x_min')?.hasError('required')">X Min is required.</mat-error>
-        </mat-form-field>
+        </div>
+        
+        <div class="spacer">
+            <mat-form-field appearance="fill">
+                <mat-label>X Min</mat-label>
+                <input matInput type="number" formControlName="x_min">
+                <mat-error *ngIf="form.get('x_min')?.hasError('required')">X Min is required.</mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>X Max</mat-label>
-            <input matInput type="number" formControlName="x_max">
-            <mat-error *ngIf="form.get('x_max')?.hasError('required')">X Max is required.</mat-error>
-        </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>X Max</mat-label>
+                <input matInput type="number" formControlName="x_max">
+                <mat-error *ngIf="form.get('x_max')?.hasError('required')">X Max is required.</mat-error>
+            </mat-form-field>
+        </div>
 
         <div>
             <button mat-raised-button [disabled]="form.invalid" type="submit">Run Algorithm</button>

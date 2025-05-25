@@ -7,6 +7,8 @@
   background-color: var(--background-color);
   color: var(--text-color);
 
+  min-height: 100vh;
+
   // angular material button color change
   --mdc-protected-button-label-text-color: var(--text-color);
   --mdc-protected-button-container-color: var(--secondary-color);
@@ -15,7 +17,7 @@
 form {
   width: 100%;
   max-width: 600px;
-  margin: 2vh 2vw;
+  margin: 2vh 2vw auto 2vw;
   padding: 20px;
   background-color: var(--primary-color);
   border-radius: 8px;
@@ -77,4 +79,10 @@ mat-label {
 .demo-chart {
   width: 50vw;
   height: auto;
+}
+
+.spacer {
+  display: flex; 
+  flex-direction: row; 
+  gap: 40px;
 }
