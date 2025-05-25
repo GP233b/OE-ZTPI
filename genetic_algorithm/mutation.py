@@ -19,7 +19,8 @@ def two_point_mutation(individual, rate):
     individual = np.array(individual, copy=True)
     if np.random.rand() < rate:
         idx1, idx2 = np.random.choice(len(individual), 2, replace=False)
-        individual[idx1], individual[idx2] = individual[idx2], individual[idx1]
+        individual[idx1] = np.random.uniform(X_MIN, X_MAX)
+        individual[idx2] = np.random.uniform(X_MIN, X_MAX)
     return individual
 
 def gaussian_mutation(individual, rate, sigma=20):
