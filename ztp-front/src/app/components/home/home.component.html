@@ -90,8 +90,19 @@
     </form>
 
     <div *ngIf="showChart" class="chart-container">
-        <div echarts [options]="heatmapOptions" class="demo-chart"></div>
-        <div echarts [options]="lineChartOptions" [merge]="updateOptions" class="demo-chart"></div>
+        <ng-container *ngIf="isLoading">
+            <mat-spinner></mat-spinner>
+        </ng-container>
+        <ng-container *ngIf="!isLoading">
+            <div echarts [options]="heatmapOptions" class="demo-chart"></div>
+            <div echarts [options]="lineChartOptions" [merge]="updateOptions" class="demo-chart"></div>
+            <div class="result-container">
+            <span><strong>Best result:</strong></span>
+            <span><strong>X:</strong> {{ this.data!.best_solution[0] }}</span>
+            <span><strong>Y:</strong> {{ this.data!.best_solution[1] }}</span>
+            <span><strong>Score:</strong> {{ this.data!.score }}</span>
+            </div>
+        </ng-container>
     </div>
 
 </div>

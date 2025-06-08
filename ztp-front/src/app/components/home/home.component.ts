@@ -11,7 +11,7 @@ import { HomeService } from '../../services/home/home.service';
 import { GeneticAlgorithmRequest } from '../../models/genetic-algorithm-request.model';
 import { CommonModule } from '@angular/common';
 import { GeneticAlgorithmResponse } from '../../models/genetic-algorithm-response.model';
-
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +25,7 @@ import { GeneticAlgorithmResponse } from '../../models/genetic-algorithm-respons
     MatButtonModule,
     MatSliderModule,
     CommonModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -41,6 +42,7 @@ export class HomeComponent {
   heatmapOptions!: EChartsCoreOption;
 
   showChart = false;
+  isLoading = false;
 
   form: FormGroup;
 
@@ -69,18 +71,17 @@ export class HomeComponent {
 
   onSubmit() {
     if (this.form.valid) {
+      this.isLoading = true;
       const requestData: GeneticAlgorithmRequest = {
         ...this.form.value,
         dim: 2
       }
       this.homeService.runGeneticAlgorithm(requestData).subscribe({
         next: (response) => {
+          this.isLoading = false;
           this.data = response;
 
-          this.showHeatmapChart(
-            requestData.x_min,
-            requestData.x_max
-          )
+          this.showHeatmapChart(this.data.full_data, this.data.best_solution[0], this.data.best_solution[1])
 
           this.showLineChartFromEpochs(this.data.history);
 
@@ -94,27 +95,53 @@ export class HomeComponent {
     }
   }
 
-  showHeatmapChart(xMin: number, xMax: number): void {
-    const { data, xData, yData } = this.generateSchwefelData(xMin, xMax, 5);
+  findClosestIndex(arr: number[], val: number): number {
+    let closestIndex = 0;
+    let minDiff = Infinity;
+    arr.forEach((item, idx) => {
+      const diff = Math.abs(item - val);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIndex = idx;
+      }
+    });
+    return closestIndex;
+  }
+  
+  showHeatmapChart(rawData: number[][], bestX: number, bestY: number): void {
+    const quantized = this.quantizeRawData(rawData as [number,number,number][], 15);
+    const { xData, yData, data } = this.generateSchwefelDataFromInput(quantized);
+    const bestXIndex = this.findClosestIndex(xData, bestX);
+    const bestYIndex = this.findClosestIndex(yData, bestY);
+
+    const bestPoint = data.find(d => d[0] === bestXIndex && d[1] === bestYIndex);
+    console.log(bestX)
+    console.log(bestY)
+    console.log(bestPoint)
+
 
     this.heatmapOptions = {
+      title: {
+        text: 'Heatmap',
+      },
       tooltip: {},
       grid: {
-        right: 140,
         left: 40,
+        right: 140,
+        containLabel: true,
       },
       xAxis: {
         type: 'category',
-        data: xData.map(x => x.toFixed(0)),
+        data: xData.map((x: number) => x.toFixed(0)),
       },
       yAxis: {
         type: 'category',
-        data: yData.map(y => y.toFixed(0)),
+        data: yData.map((y: number) => y.toFixed(0)),
       },
       visualMap: {
         type: 'piecewise',
-        min: Math.floor(Math.min(...data.map(d => d[2]))),
-        max: Math.floor(Math.max(...data.map(d => d[2]))),
+        min: Math.min(...data.map(d => d[2])),
+        max: Math.max(...data.map(d => d[2])),
         left: 'right',
         top: 'center',
         calculable: true,
@@ -135,73 +162,86 @@ export class HomeComponent {
           emphasis: {
             itemStyle: {
               borderColor: '#333',
-              borderWidth: 1,
+              borderWidth: 0,
             },
           },
           progressive: 1000,
           animation: false,
         },
+        {
+        name: 'Best Solution',
+        type: 'scatter',
+        data: [[bestXIndex, bestYIndex]],
+        symbolSize: 15,
+        itemStyle: {
+          color: 'black',
+          borderColor: 'yellow',
+          borderWidth: 2,
+        },
+        tooltip: {
+          formatter: `Best: (${bestX.toFixed(2)}, ${bestY.toFixed(2)})`
+        },
+        z: 10,
+      }
       ],
     };
 
     this.showChart = true;
   }
 
-  generateSchwefelData(x_min: number, x_max: number, step: number = 5) {
-    const xData: number[] = [];
-    const yData: number[] = [];
-    const data: [number, number, number][] = [];
+  quantizeRawData(rawData: [number, number, number][], resolution: number = 10) {
+    const bucketMap = new Map<string, { sum: number, count: number }>();
 
-    const schwefel = (x: number, y: number) => {
-      return (
-        -x * Math.sin(Math.sqrt(Math.abs(x))) -
-        y * Math.sin(Math.sqrt(Math.abs(y)))
-      );
-    };
+    for (const [x, y, z] of rawData) {
+      const qx = Math.round(x / resolution) * resolution;
+      const qy = Math.round(y / resolution) * resolution;
+      const key = `${qx},${qy}`;
 
-    const xSteps = Math.floor((x_max - x_min) / step);
-    const ySteps = xSteps;
-
-    for (let i = 0; i <= xSteps; i++) {
-      const x = x_min + i * step;
-      xData.push(x);
-    }
-
-    for (let j = 0; j <= ySteps; j++) {
-      const y = x_min + j * step;
-      yData.push(y);
-    }
-
-    for (let i = 0; i < xData.length; i++) {
-      for (let j = 0; j < yData.length; j++) {
-        const z = schwefel(xData[i], yData[j]) + (Math.random() - 0.5) * 0.1;
-        data.push([i, j, z]);
+      if (!bucketMap.has(key)) {
+        bucketMap.set(key, { sum: z, count: 1 });
+      } else {
+        const entry = bucketMap.get(key)!;
+        entry.sum += z;
+        entry.count += 1;
       }
     }
 
-    return { xData, yData, data };
+    const quantizedData: [number, number, number][] = [];
+
+    for (const [key, { sum, count }] of bucketMap.entries()) {
+      const [qxStr, qyStr] = key.split(',');
+      const qx = Number(qxStr);
+      const qy = Number(qyStr);
+      quantizedData.push([qx, qy, sum / count]);
+    }
+
+    return quantizedData;
   }
 
 
+  generateSchwefelDataFromInput(data: [number, number, number][]) {
+    const xVals = data.map(d => d[0]);
+    const yVals = data.map(d => d[1]);
+    const zVals = data.map(d => d[2]);
 
-  prepareHeatmapData(x: number[], y: number[], z: number[]) {
-    const xData = Array.from(new Set(x)).sort((a, b) => a - b);
-    const yData = Array.from(new Set(y)).sort((a, b) => a - b);
+    const xData = Array.from(new Set(xVals)).sort((a, b) => a - b);
+    const yData = Array.from(new Set(yVals)).sort((a, b) => a - b);
 
     const xIndexMap = new Map<number, number>();
     xData.forEach((val, idx) => xIndexMap.set(val, idx));
+
     const yIndexMap = new Map<number, number>();
     yData.forEach((val, idx) => yIndexMap.set(val, idx));
 
-    const data = [];
-    for (let i = 0; i < x.length; i++) {
-      const xi = xIndexMap.get(x[i])!;
-      const yi = yIndexMap.get(y[i])!;
-      data.push([xi, yi, z[i]]);
-    }
+    const transformedData: [number, number, number][] = data.map(([x, y, z]) => {
+      const xi = xIndexMap.get(x)!;
+      const yi = yIndexMap.get(y)!;
+      return [xi, yi, z];
+    });
 
-    return { data, xData, yData };
+    return { xData, yData, data: transformedData };
   }
+
 
   showLineChartFromEpochs(z: number[]) {
     this.dataT = [];
