@@ -11,13 +11,18 @@ def genetic_algorithm(mutation_func, crossover_func, selection_func, mutation_ra
     pop = np.random.uniform(x_min, x_max, (pop_size, dim))
     history = []
     best_individuals_per_epoch = []
+    full_data = [] 
 
     for iteration in range(gens):
         scores = np.array([schwefel(ind) for ind in pop])
+
+        for ind, score in zip(pop, scores):
+            full_data.append(ind.tolist() + [float(score)])
+
         elite_n = int(elitism_rate)
         elite_indices = scores.argsort()[:elite_n]
         elites = pop[elite_indices]
-        
+
         best_score = scores[elite_indices[0]]
         best_individual = elites[0]
         history.append(best_score)
@@ -35,9 +40,10 @@ def genetic_algorithm(mutation_func, crossover_func, selection_func, mutation_ra
         pop = np.array(new_pop[:pop_size])
         pop = np.clip(pop, x_min, x_max)
 
-    best_solution = pop[np.argmin([schwefel(ind) for ind in pop])]
+    final_scores = np.array([schwefel(ind) for ind in pop])
+    best_solution = pop[np.argmin(final_scores)]
 
     elapsed_time = time.time() - start_time
     print(f"Czas wykonania algorytmu: {elapsed_time:.2f} sekundy")
 
-    return best_solution, history, best_individuals_per_epoch
+    return best_solution, history, best_individuals_per_epoch, full_data

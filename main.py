@@ -33,7 +33,7 @@ def api_run_genetic_algorithm():
         if not all([mutation_func, crossover_func, selection_func]):
             return jsonify({'error': 'Invalid function name(s) provided.'}), 400
 
-        best_solution, history, best_individuals = genetic_algorithm(
+        best_solution, history, best_individuals, full_data = genetic_algorithm(
             mutation_func,
             crossover_func,
             selection_func,
@@ -52,12 +52,15 @@ def api_run_genetic_algorithm():
             'best_solution': best_solution.tolist(),
             'score': score,
             'history': history,
-            'best_individuals': best_individuals
+            'best_individuals': best_individuals,
+            'full_data': full_data 
         })
+
 
     except Exception as e:
         app.logger.exception("Algorithm execution error")
         return jsonify({'error': str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(debug=True)
