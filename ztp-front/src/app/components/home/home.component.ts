@@ -44,9 +44,9 @@ export class HomeComponent {
 
   form: FormGroup;
 
-  mutationOptions = ['single_point_mutation'];
-  crossoverOptions = ['one_point_crossover', 'uniform_crossover', 'granular_crossover'];
-  selectionOptions = ['tournament_selection', 'roulette_selection'];
+  mutationOptions = ['single_point_mutation', 'two_point_mutation', 'boundary_mutation', 'gaussian_mutation'];
+  crossoverOptions = ['one_point_crossover', 'two_point_crossover', 'uniform_crossover', 'granular_crossover'];
+  selectionOptions = ['tournament_selection', 'roulette_wheel_selection', 'elitist_selection'];
 
   data: GeneticAlgorithmResponse | null = null;
 
