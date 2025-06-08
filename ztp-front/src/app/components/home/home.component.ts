@@ -114,12 +114,6 @@ export class HomeComponent {
     const bestXIndex = this.findClosestIndex(xData, bestX);
     const bestYIndex = this.findClosestIndex(yData, bestY);
 
-    const bestPoint = data.find(d => d[0] === bestXIndex && d[1] === bestYIndex);
-    console.log(bestX)
-    console.log(bestY)
-    console.log(bestPoint)
-
-
     this.heatmapOptions = {
       title: {
         text: 'Heatmap',
