@@ -10,8 +10,6 @@ services:
     plan: free
     region: frankfurt
     dockerfilePath: ./Dockerfile  # Use the Dockerfile in the root for Flask
-    buildCommand: pip install --no-cache-dir -r requirements.txt
-    startCommand: "flask run --host=0.0.0.0"
     envVars:
       - key: FLASK_APP
         value: "main.py"
@@ -28,6 +26,4 @@ services:
     plan: free
     region: frankfurt
     dockerfilePath: ./ztp-front/Dockerfile  # Use the Dockerfile inside the ztp-front directory for Angular
-    buildCommand: npm install && npm run build -- --configuration=production
-    startCommand: "nginx -g daemon off;"
     autoDeployTrigger: commit
