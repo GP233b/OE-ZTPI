@@ -1,0 +1,37 @@
+version: "1"
+
+services:
+  # Backend (Flask service)
+  - type: web
+    name: backend
+    runtime: docker
+    repo: https://github.com/GP233b/OE-ZTPI
+    branch: frontend  # Adjust this if needed
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile  # Use the Dockerfile in the root for Flask
+    buildCommand: pip install --no-cache-dir -r requirements.txt
+    startCommand: ["flask", "run", "--host=0.0.0.0"]
+    ports:
+      - "5000:5000"
+    envVars:
+      - key: FLASK_APP
+        value: "main.py"
+      - key: FLASK_ENV
+        value: "development"
+    autoDeployTrigger: commit
+
+  # Frontend (Angular service)
+  - type: web
+    name: frontend
+    runtime: docker
+    repo: https://github.com/GP233b/OE-ZTPI
+    branch: frontend  # Adjust this if needed
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./ztp-front/Dockerfile  # Use the Dockerfile inside the ztp-front directory for Angular
+    buildCommand: npm install && npm run build -- --configuration=production
+    startCommand: ["nginx", "-g", "daemon off;"]
+    ports:
+      - "80:80"
+    autoDeployTrigger: commit
