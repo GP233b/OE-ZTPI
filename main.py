@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from genetic_algorithm.algorithm import genetic_algorithm
-from genetic_algorithm.evaluation import schwefel
+import genetic_algorithm.evaluation as evaluation
 import genetic_algorithm.mutation as mutation
 import genetic_algorithm.crossover as crossover
 import genetic_algorithm.selection as selection
@@ -14,6 +14,12 @@ def api_run_genetic_algorithm():
     data = request.get_json()
 
     try:
+        fitness_name = data.get('fitness', 'schwefel')
+        fitness_func = getattr(evaluation, fitness_name, None)
+
+        if fitness_func is None:
+            return jsonify({'error': f'Fitness function "{fitness_name}" not found.'}), 400
+
         mutation_name = data.get('mutation', 'single_point_mutation')
         crossover_name = data.get('crossover', 'single_point_crossover')
         selection_name = data.get('selection', 'tournament_selection')
@@ -37,6 +43,7 @@ def api_run_genetic_algorithm():
             mutation_func,
             crossover_func,
             selection_func,
+            fitness_func,
             mutation_rate,
             elitism_rate,
             pop_size,
@@ -46,7 +53,8 @@ def api_run_genetic_algorithm():
             dim
         )
 
-        score = schwefel(best_solution)
+        score = fitness_func(best_solution)
+
 
         return jsonify({
             'best_solution': best_solution.tolist(),
