@@ -12,7 +12,13 @@ from datetime import datetime
 def create_plot_folder(folder='plots'):
     if not os.path.exists(folder):
         os.makedirs(folder)
+    else:
+        for file in os.listdir(folder):
+            file_path = os.path.join(folder, file)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
     return folder
+
 
 def plot_fitness_surface(fitness_func, x_min, x_max, resolution=100,
                          folder='plots', fitness_name='fitness',
@@ -56,7 +62,8 @@ def plot_fitness_surface(fitness_func, x_min, x_max, resolution=100,
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     create_plot_folder(folder)
-    filename = f"{folder}/{fitness_name}_surface_{timestamp}.png"
+    filename = f"{folder}/{fitness_name}_surface.png"
+
     plt.savefig(filename)
     plt.close(fig)
 
