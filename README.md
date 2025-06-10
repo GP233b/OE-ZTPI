@@ -68,6 +68,6 @@ Parametry algorytmu (populacja, pokolenia, współczynnik mutacji, zakres genów
 
 ![schwefel_surface_20250610_205429](https://github.com/user-attachments/assets/7015997f-6268-4423-b3c0-3159614268d4)
 
-![hyperellipsoid_surface_20250610_210013](https://github.com/user-attachments/assets/64ba141f-b7bf-4e2d-884c-b86f84119708)
+![ackley_surface](https://github.com/user-attachments/assets/28636198-ef4b-4bea-8ea1-88d44ba3ab3d)
 
-![ackley_surface_20250610_205652](https://github.com/user-attachments/assets/e0d7d4cd-1024-46f2-a427-9ff5aeae84d8)
+![michalewicz_surface](https://github.com/user-attachments/assets/2d13eeda-c289-42b3-beea-14db1a14580b)
