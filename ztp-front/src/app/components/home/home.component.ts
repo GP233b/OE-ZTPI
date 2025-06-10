@@ -49,6 +49,7 @@ export class HomeComponent {
   mutationOptions = ['single_point_mutation', 'two_point_mutation', 'boundary_mutation', 'gaussian_mutation'];
   crossoverOptions = ['one_point_crossover', 'two_point_crossover', 'uniform_crossover', 'granular_crossover'];
   selectionOptions = ['tournament_selection', 'roulette_wheel_selection', 'elitist_selection'];
+  fitnessOptions = ['schwefel', 'sphere', 'rastrigin', 'hypersphere', 'hyperellipsoid', 'ackley', 'michalewicz']
 
   data: GeneticAlgorithmResponse | null = null;
 
@@ -60,6 +61,7 @@ export class HomeComponent {
       mutation: ['single_point_mutation', Validators.required],
       crossover: ['one_point_crossover', Validators.required],
       selection: ['tournament_selection', Validators.required],
+      fitness: ['schwefel', Validators.required],
       mutation_rate: [0.1, [Validators.required, Validators.min(0.1), Validators.max(1)]],
       elitism_rate: [1, [Validators.required, Validators.min(1), Validators.max(100)]],
       pop_size: [100, [Validators.required, Validators.min(1)]],
@@ -110,7 +112,7 @@ export class HomeComponent {
   
   showHeatmapChart(rawData: number[][], bestX: number, bestY: number): void {
     const quantized = this.quantizeRawData(rawData as [number,number,number][], 15);
-    const { xData, yData, data } = this.generateSchwefelDataFromInput(quantized);
+    const { xData, yData, data } = this.generateDataFromInput(quantized);
     const bestXIndex = this.findClosestIndex(xData, bestX);
     const bestYIndex = this.findClosestIndex(yData, bestY);
 
@@ -213,7 +215,7 @@ export class HomeComponent {
   }
 
 
-  generateSchwefelDataFromInput(data: [number, number, number][]) {
+  generateDataFromInput(data: [number, number, number][]) {
     const xVals = data.map(d => d[0]);
     const yVals = data.map(d => d[1]);
     const zVals = data.map(d => d[2]);

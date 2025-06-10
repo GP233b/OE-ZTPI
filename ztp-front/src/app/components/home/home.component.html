@@ -34,6 +34,16 @@
             <mat-error *ngIf="form.get('selection')?.hasError('required')">Selection name is required.</mat-error>
         </mat-form-field>
 
+        <mat-form-field appearance="fill">
+            <mat-label>Fitness function Name</mat-label>
+            <mat-select formControlName="fitness">
+            <mat-option *ngFor="let option of fitnessOptions" [value]="option">
+                {{ option }}
+            </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('fitness')?.hasError('required')">Fitness function is required.</mat-error>
+        </mat-form-field>
+
         
         <div class="spacer">
             <mat-form-field appearance="fill">

@@ -9,4 +9,5 @@ export interface GeneticAlgorithmRequest {
   x_min: number;            // Minimum value for x (e.g., -500)
   x_max: number;            // Maximum value for x (e.g., 500)
   dim: number;              // Dimension (e.g., 10)
+  fitness: string;          // fitness function i.e. schwefel
 }
