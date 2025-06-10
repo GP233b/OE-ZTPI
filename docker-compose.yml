@@ -1,0 +1,29 @@
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_APP=main.py
+      - FLASK_ENV=development
+    networks:
+      - app-network
+    restart: always
+
+
+  angular:
+    build:
+      context: ./ztp-front
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+    restart: always  
+
+
+networks:
+  app-network:
