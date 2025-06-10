@@ -60,8 +60,7 @@ Parametry algorytmu (populacja, pokolenia, współczynnik mutacji, zakres genów
 2. Skonfiguruj parametry w `config.py`.
 3. Uruchom serwer Flask:
    ```bash
-   python app.py
-
+   python main.py
 
 ![image](https://github.com/user-attachments/assets/36aec483-1268-4974-ac76-20531d214faf)
 
