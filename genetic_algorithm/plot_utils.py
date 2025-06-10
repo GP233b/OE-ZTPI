@@ -1,10 +1,13 @@
 # genetic_algorithm/plot_utils.py
 
 import os
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from datetime import datetime
+
 
 def create_plot_folder(folder='plots'):
     if not os.path.exists(folder):
