@@ -69,7 +69,7 @@ Folder `plots/` zawiera **wykresy generowane automatycznie przez backend** przy 
 ### Co zawiera:
 
 - **Trójwymiarowy wykres funkcji celu (fitness surface)** z zaznaczoną najlepszą znalezioną wartością (czerwona kropka).
-- Nazwa pliku zawiera nazwę funkcji celu oraz znacznik czasu.
+- Nazwa pliku zawiera nazwę funkcji celu.
 - Format pliku: `.png`.
 
 ### Zasady działania:
