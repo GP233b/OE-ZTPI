@@ -62,6 +62,32 @@ Parametry algorytmu (populacja, pokolenia, współczynnik mutacji, zakres genów
    ```bash
    python main.py
 
+## 📁 Folder `plots/`
+
+Folder `plots/` zawiera **wykresy generowane automatycznie przez backend** przy każdym uruchomieniu algorytmu.
+
+### Co zawiera:
+
+- **Trójwymiarowy wykres funkcji celu (fitness surface)** z zaznaczoną najlepszą znalezioną wartością (czerwona kropka).
+- Nazwa pliku zawiera nazwę funkcji celu oraz znacznik czasu.
+- Format pliku: `.png`.
+
+### Zasady działania:
+
+- Folder jest **czyszczony automatycznie przed wygenerowaniem nowego wykresu**, dzięki czemu zawiera **tylko jeden aktualny obraz**.
+- Wykres jest tworzony przez backend i zapisywany przy każdym wywołaniu endpointu `/api/run`.
+
+### Przykłady wykresów:
+
+![schwefel_surface](https://github.com/user-attachments/assets/7015997f-6268-4423-b3c0-3159614268d4)
+
+![ackley_surface](https://github.com/user-attachments/assets/28636198-ef4b-4bea-8ea1-88d44ba3ab3d)
+
+![michalewicz_surface](https://github.com/user-attachments/assets/2d13eeda-c289-42b3-beea-14db1a14580b)
+
+
+# Genetic Algorithm Frontend
+
 ![image](https://github.com/user-attachments/assets/4c732075-9572-4a51-a88e-f7916db10dbd)
 
 ![image](https://github.com/user-attachments/assets/27295f94-9d5e-4438-bd9f-65065b935cd5)
@@ -74,13 +100,3 @@ Parametry algorytmu (populacja, pokolenia, współczynnik mutacji, zakres genów
 
 ![image](https://github.com/user-attachments/assets/08087c38-5519-4b46-8c63-0407d75b75d9)
 
-
-
-
-
-
-![schwefel_surface_20250610_205429](https://github.com/user-attachments/assets/7015997f-6268-4423-b3c0-3159614268d4)
-
-![ackley_surface](https://github.com/user-attachments/assets/28636198-ef4b-4bea-8ea1-88d44ba3ab3d)
-
-![michalewicz_surface](https://github.com/user-attachments/assets/2d13eeda-c289-42b3-beea-14db1a14580b)
