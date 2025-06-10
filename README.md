@@ -62,9 +62,22 @@ Parametry algorytmu (populacja, pokolenia, współczynnik mutacji, zakres genów
    ```bash
    python main.py
 
-![image](https://github.com/user-attachments/assets/36aec483-1268-4974-ac76-20531d214faf)
+![image](https://github.com/user-attachments/assets/4c732075-9572-4a51-a88e-f7916db10dbd)
 
-![image](https://github.com/user-attachments/assets/33e55787-6fac-4b58-ba27-d9455f70e395)
+![image](https://github.com/user-attachments/assets/27295f94-9d5e-4438-bd9f-65065b935cd5)
+
+![image](https://github.com/user-attachments/assets/9cb82bee-c1ce-4c19-9f50-7d8ff5e2cea3)
+
+![image](https://github.com/user-attachments/assets/3ce0e400-1f28-4139-926b-733cbe09f710)
+
+![image](https://github.com/user-attachments/assets/5dc0c962-cdd1-414a-92b4-1e43b809f9a5)
+
+![image](https://github.com/user-attachments/assets/08087c38-5519-4b46-8c63-0407d75b75d9)
+
+
+
+
+
 
 ![schwefel_surface_20250610_205429](https://github.com/user-attachments/assets/7015997f-6268-4423-b3c0-3159614268d4)
 
