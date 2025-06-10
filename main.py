@@ -40,12 +40,6 @@ def api_run_genetic_algorithm():
         if not all([mutation_func, crossover_func, selection_func]):
             return jsonify({'error': 'Invalid function name(s) provided.'}), 400
 
-        # Generowanie wykresu powierzchni funkcji fitness jeśli dim==2
-        if dim == 2:
-            plot_path = plot_utils.plot_fitness_surface(fitness_func, x_min, x_max, resolution=100, fitness_name=fitness_name)
-        else:
-            plot_path = None
-
         best_solution, history, best_individuals, full_data = genetic_algorithm(
             mutation_func,
             crossover_func,
@@ -61,6 +55,13 @@ def api_run_genetic_algorithm():
         )
 
         score = fitness_func(best_solution)
+
+        # Generowanie wykresu powierzchni funkcji fitness jeśli dim==2
+        if dim == 2:
+            plot_path = plot_utils.plot_fitness_surface(fitness_func, x_min, x_max, resolution=100, fitness_name=fitness_name, best_solution=best_solution, best_score=score)
+        else:
+            plot_path = None
+
 
         return jsonify({
             'best_solution': best_solution.tolist(),

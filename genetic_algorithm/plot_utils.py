@@ -34,7 +34,10 @@ def plot_fitness_surface(fitness_func, x_min, x_max, resolution=100,
             best_solution[1],
             best_score,
             color='red',
-            s=50,
+            s=70,
+            edgecolor='black',
+            depthshade=False,
+            zorder=10,
             label='Best solution'
         )
         ax.legend()
