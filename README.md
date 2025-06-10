@@ -1,3 +1,3 @@
-# OE-ZTPI
- Klasyczny algorytm generyczny PROJEKT 2
+# ZTP
+ Klasyczny algorytm generyczny
 
