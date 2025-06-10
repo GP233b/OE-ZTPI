@@ -1,11 +1,11 @@
 import numpy as np
 import time
 from config import *
-from genetic_algorithm.evaluation import schwefel
 
-def genetic_algorithm(mutation_func, crossover_func, selection_func, mutation_rate,
-                      elitism_rate=1, pop_size=POP_SIZE, gens=GENS,
+def genetic_algorithm(mutation_func, crossover_func, selection_func, fitness_func,
+                      mutation_rate, elitism_rate=1, pop_size=POP_SIZE, gens=GENS,
                       x_min=X_MIN, x_max=X_MAX, dim=DIM):
+
     start_time = time.time()
 
     pop = np.random.uniform(x_min, x_max, (pop_size, dim))
@@ -14,7 +14,7 @@ def genetic_algorithm(mutation_func, crossover_func, selection_func, mutation_ra
     full_data = [] 
 
     for iteration in range(gens):
-        scores = np.array([schwefel(ind) for ind in pop])
+        scores = np.array([fitness_func(ind) for ind in pop])
 
         for ind, score in zip(pop, scores):
             full_data.append(ind.tolist() + [float(score)])
@@ -40,7 +40,7 @@ def genetic_algorithm(mutation_func, crossover_func, selection_func, mutation_ra
         pop = np.array(new_pop[:pop_size])
         pop = np.clip(pop, x_min, x_max)
 
-    final_scores = np.array([schwefel(ind) for ind in pop])
+    final_scores = np.array([fitness_func(ind) for ind in pop])
     best_solution = pop[np.argmin(final_scores)]
 
     elapsed_time = time.time() - start_time
