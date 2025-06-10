@@ -62,17 +62,13 @@ def api_run_genetic_algorithm():
 
         score = fitness_func(best_solution)
 
-        response = {
+        return jsonify({
             'best_solution': best_solution.tolist(),
             'score': score,
             'history': history,
             'best_individuals': best_individuals,
-            'full_data': full_data
-        }
-        if plot_path:
-            response['fitness_surface_plot'] = plot_path
-
-        return jsonify(response)
+            'full_data': full_data 
+        })
 
     except Exception as e:
         app.logger.exception("Algorithm execution error")
