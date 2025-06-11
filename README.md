@@ -56,11 +56,10 @@ Parametry algorytmu (populacja, pokolenia, współczynnik mutacji, zakres genów
 
 ## Uruchomienie
 
-1. Zainstaluj wymagane pakiety (np. Flask, numpy).
-2. Skonfiguruj parametry w `config.py`.
-3. Uruchom serwer Flask:
+1. Zainstaluj Dockera i go uruchom.
+2. Będąc w folderze z plikiem docera wykonaj komendę 
    ```bash
-   python main.py
+   docker compose up
 
 ## 📁 Folder `plots/`
 
